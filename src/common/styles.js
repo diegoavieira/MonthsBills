@@ -22,11 +22,20 @@ export const TEXT = StyleSheet.create({
     fontSize: FONT_SIZE.normal
   },
   normalDark: {
-    color: COLOR.medium,
+    color: COLOR.dark,
     fontSize: FONT_SIZE.normal
+  },
+  normalDarkStrong: {
+    color: COLOR.dark,
+    fontSize: FONT_SIZE.normal,
+    fontWeight: '500'
   },
   highLight: {
     color: COLOR.light,
+    fontSize: FONT_SIZE.high
+  },
+  highDark: {
+    color: COLOR.dark,
     fontSize: FONT_SIZE.high
   }
 });

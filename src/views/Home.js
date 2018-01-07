@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, NetInfo, View } from 'react-native';
+import { StyleSheet, NetInfo, View, ViewPagerAndroid, Text } from 'react-native';
 
 import { isConnected } from '../actions';
 import * as globalStyles from '../common/styles';
-import BillsList from '../components/BillsList';
 import Header from '../components/Header';
+import BillsList from '../components/BillsList';
+import BtnIcon from '../components/BtnIcon';
 
 class Home extends Component {
   

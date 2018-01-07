@@ -3,7 +3,7 @@ import axios from 'axios';
 const REQUEST_DATA = 'https://rest-api-posts.herokuapp.com';  
 
 export const fetchBills = () => {
-  const fetchBillsUrl = `${REQUEST_DATA}/posts`; 
+  const fetchBillsUrl = `${REQUEST_DATA}/bills`; 
   return dispatch => {
     axios.get(fetchBillsUrl).then(result => {
       if (result.status === 200) {

@@ -4,7 +4,7 @@ import { StackNavigator } from 'react-navigation';
 import Home from '../views/Home';
 import CreateBill from '../views/CreateBill';
 
-const RouterNav = StackNavigator({
+const Routers = StackNavigator({
   Home: {
     screen: Home
   },
@@ -15,4 +15,4 @@ const RouterNav = StackNavigator({
   headerMode: 'none'
 });
 
-export default RouterNav;
+export default Routers;

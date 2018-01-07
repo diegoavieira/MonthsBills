@@ -6,7 +6,10 @@ class BillsListItem extends Component {
     const { bill } = this.props;
     return (
       <View style={{ paddingVertical: 15, borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginHorizontal: 15 }}>
-        <Text style={{ fontSize: 16 }}>{bill.title}</Text>
+        <Text style={{ fontSize: 16 }}>{bill.name}</Text>
+        <Text style={{ fontSize: 16 }}>{bill.value}</Text>
+        <Text style={{ fontSize: 16 }}>{bill.status}</Text>
+        <Text style={{ fontSize: 16 }}>{bill.maturity}</Text>
       </View>
     );
   }

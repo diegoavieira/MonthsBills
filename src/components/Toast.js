@@ -9,7 +9,6 @@ class Toast extends Component {
   }
 
   componentDidMount() {
-    console.log(styles)
     const { animatedValue } = this.state;
     this._getAnimated(1);
   }
@@ -41,7 +40,7 @@ class Toast extends Component {
     } else {
       setTimeout(() => {
         this._getAnimated(0);
-      }, 4000);
+      }, 5000);
     };
   }
 
