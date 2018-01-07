@@ -1,7 +1,6 @@
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
 
-import * as styles from '../styles';
 import Home from '../views/Home';
 import CreateBill from '../views/CreateBill';
 
@@ -13,12 +12,7 @@ const RouterNav = StackNavigator({
     screen: CreateBill
   }
 }, {
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: styles.COLOR.primary
-    },
-    headerTintColor: styles.COLOR.light
-  }
+  headerMode: 'none'
 });
 
 export default RouterNav;

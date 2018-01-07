@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Text, Animated, Easing, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, Animated, Easing, TouchableOpacity } from 'react-native';
 
-import * as styles from '../styles';
+import * as globalStyles from '../common/styles';
 
 class Toast extends Component {
   state = {
@@ -50,10 +50,10 @@ class Toast extends Component {
     if (onCloseButton) {
       return (
         <TouchableOpacity
-          style={styles.TOAST.button}
+          style={styles.button}
           onPress={this._onClose}
         >
-          <Text style={[styles.TEXT.normalMedium]}>Okay</Text>
+          <Text style={[globalStyles.TEXT.normalMedium]}>Okay</Text>
         </TouchableOpacity>
       );
     };
@@ -62,7 +62,7 @@ class Toast extends Component {
 
   render() {
     const { animatedValue } = this.state;
-    const { onCloseButton } = this.props;
+    const { onCloseButton, message } = this.props;
     const bottom = animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: [-15, 15],
@@ -70,17 +70,34 @@ class Toast extends Component {
     return (
       <Animated.View
         style={[
-          styles.TOAST.content,
+          styles.content,
           { opacity: animatedValue },
           { bottom },
           { padding: onCloseButton ? null : 15 }
         ]}
       >
-        <Text style={styles.TEXT.normalLight}>{this.props.message}</Text>
+        <Text style={globalStyles.TEXT.normalLight}>{message}</Text>
         {this._renderOnCloseButton()}
       </Animated.View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  content: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    paddingLeft: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  button: {
+    padding: 16
+  }
+});
 
 export default Toast;

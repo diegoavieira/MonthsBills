@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RefreshControl, FlatList, View } from 'react-native';
+import { StyleSheet, RefreshControl, FlatList, View } from 'react-native';
 
 import { fetchBills, clearFetchBills } from '../actions';
-import * as styles from '../styles';
+import * as globalStyles from '../common/styles';
 import BillsListItem from './BillsListItem';
 import Toast from './Toast';
 
@@ -45,8 +45,8 @@ class BillsList extends Component {
             <RefreshControl
               refreshing={bills.loading}
               onRefresh={this._refreshBillsList}
-              progressBackgroundColor={styles.COLOR.light}
-              colors={[styles.COLOR.primary]}
+              progressBackgroundColor={globalStyles.COLOR.light}
+              colors={[globalStyles.COLOR.primary]}
             />
           }
         />
@@ -59,7 +59,7 @@ class BillsList extends Component {
   render() {
     const { bills } = this.props;
     return (
-      <View style={styles.BILLS_LIST.content}>
+      <View style={styles.content}>
         {this._renderBillsList()}
         {this._renderToast()}
       </View>
@@ -72,5 +72,11 @@ const mapStateToProps = state => {
   const { connection } = state.connectionReducer;
   return { bills, connection };
 };
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1
+  }
+});
 
 export default connect(mapStateToProps, { fetchBills, clearFetchBills })(BillsList);

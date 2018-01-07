@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { NetInfo, Text , TouchableOpacity} from 'react-native';
+import { StyleSheet, NetInfo, View } from 'react-native';
 
 import { isConnected } from '../actions';
+import * as globalStyles from '../common/styles';
 import BillsList from '../components/BillsList';
-import Screen from '../components/Screen';
-import Button from '../components/Button';
+import Header from '../components/Header';
 
 class Home extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Month\'s Bills',
-  });
-
+  
   componentDidMount() {
     NetInfo.addEventListener('connectionChange', this._onConnectivityChange);
     NetInfo.getConnectionInfo().then(connectionInfo => {
@@ -23,14 +20,6 @@ class Home extends Component {
     NetInfo.removeEventListener('connectionChange', this._onConnectivityChange);
   }
 
-  _renderHeaderRight = () => {
-    return (
-      <View>
-        <Button onPress={this._toCreateBill} text='+' />
-      </View>
-    );
-  }
-  
   _onConnectivityChange = connectionInfo => {
     this.props.isConnected(connectionInfo);
   }
@@ -40,14 +29,19 @@ class Home extends Component {
     navigation.navigate('CreateBill');
   }
 
+  _headerRight = () => ([
+    {
+      icon: 'plus',
+      onPress: this._toCreateBill
+    }
+  ]);
+
   render() {
     return (
-      <Screen>
+      <View style={styles.content}>
+        <Header title="Month's Bills" right={this._headerRight()} />
         <BillsList />
-        <TouchableOpacity onPress={this._toCreateBill} style={{ padding: 15, backgroundColor: '#63707c'}}>
-          <Text style={{ color: 'snow', textAlign: 'center', fontSize: 16 }}>Create Bill</Text>
-        </TouchableOpacity>
-      </Screen>
+      </View>
     );
   }
 }
@@ -56,5 +50,12 @@ const mapStateToProps = state => {
   const { connection } = state.connectionReducer;
   return { connection };
 };
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    backgroundColor: globalStyles.COLOR.light
+  }
+})
 
 export default connect(mapStateToProps, { isConnected })(Home);

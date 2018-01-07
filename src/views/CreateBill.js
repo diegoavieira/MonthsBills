@@ -1,20 +1,33 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
-import Screen from '../components/Screen';
+import * as globalStyles from '../common/styles';
+import Header from '../components/Header';
 
 class CreateBill extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Create Bill'
-  });
+  
+  _headerLeft = () => {
+    const { goBack } = this.props.navigation;
+    return {
+      icon: 'arrow-left',
+      onPress: goBack
+    };
+  };
 
   render() {
     return (
-      <Screen>
+      <View style={styles.content}>
+        <Header title="Create Bill" left={this._headerLeft()} />
         <Text>CreateBill</Text>
-      </Screen>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  content: {
+    backgroundColor: globalStyles.COLOR.light
+  }
+});
 
 export default CreateBill;
