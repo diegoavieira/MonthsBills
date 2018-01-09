@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import Swiper from 'react-native-swiper';
 import { StyleSheet, RefreshControl, FlatList, View, Text } from 'react-native';
 
 import { fetchBills, clearFetchBills } from '../actions';
@@ -10,9 +11,6 @@ import BillsListItem from './BillsListItem';
 import Toast from './Toast';
 
 class BillsList extends Component {
-  state = {
-    month: moment()
-  }
 
   componentDidMount() {
     this.props.fetchBills();
@@ -21,9 +19,6 @@ class BillsList extends Component {
 
   _renderToast = () => {
     const { bills, connection } = this.props;
-    if (bills.success && connection.online) {
-      return <Toast message={bills.message} />
-    };
     if (bills.success === false && connection.online) {
       return <Toast message={bills.message} />
     };
@@ -39,19 +34,19 @@ class BillsList extends Component {
     this._renderToast();
   }
 
-  _billsPerMonth = () => {
+  _billsPerMonth = month => {
     const { bills } = this.props;
     return bills.data.filter(bill => {
-      return this._getMonthYear(bill.maturity) === this._getMonthYear(this.state.month);
+      return this._getMonthYear(bill.maturity) === month;
     });
   }
 
-  _renderBillsList = () => {
+  _renderBillsList = month => {
     const { bills } = this.props;
     if (bills.data) {
       return (
         <FlatList
-          data={this._billsPerMonth()}
+          data={this._billsPerMonth(month)}
           keyExtractor={(item, index) => item.id}
           renderItem={({ item }) => <BillsListItem bill={item} />}
           refreshControl={
@@ -69,53 +64,55 @@ class BillsList extends Component {
     };
   }
 
-  _renderBillsListHeader = () => {
+  _renderBillsListHeader = month => {
     return (
       <View style={styles.listHeader}>
-        <BtnIcon
-          onPress={() => this._toLastMonth()}
-          icon='arrow-left'
-          color={globalStyles.COLOR.primary}
-          size={globalStyles.FONT_SIZE.high}
-        />
-        <Text style={globalStyles.TEXT.normalDarkStrong}>
-        {this._getMonthYear(this.state.month)}
+        <Text style={globalStyles.TEXT.normalPrimaryStrong}>
+          {month}
         </Text>
-        <BtnIcon
-          onPress={() => this._toNextMonth()}
-          icon='arrow-right'
-          color={globalStyles.COLOR.primary}
-          size={globalStyles.FONT_SIZE.high}
-        />
       </View>
     );
   }
 
+  _billsPages = () => {
+    const { bills } = this.props;
+    if (bills.data) {
+      return bills.data.map((el) => {
+        return this._getMonthYear(el.maturity)
+      }).filter((el, index, arr) => {
+        return index === arr.indexOf(el);
+      });
+    }
+  }
+
   _getMonthYear = date => {
-    return moment(date).format('MMM/YYYY');
+    return moment(date).format('MMMM YYYY');
   }
 
-  _toLastMonth = () => {
-    this.setState({
-      month: this.state.month.subtract(1, 'M')
-    });
-  }
-
-  _toNextMonth = () => {
-    this.setState({
-      month: this.state.month.add(1, 'M')
-    });
+  _setInitialPage = (month = moment()) => {
+    return this._billsPages().indexOf(this._getMonthYear(month))
   }
 
   render() {
     const { bills } = this.props;
     return (
       <View style={styles.content}>
-        {this._renderBillsListHeader()}
-        <View style={styles.list}>
-          {this._renderBillsList()}
-          {this._renderToast()}
-        </View>
+        <Swiper
+          style={styles.content}
+          showsPagination={false}
+          index={this._setInitialPage()}
+          loop={false}
+        >
+          {this._billsPages().map((month, index) => {
+            return (
+              <View key={index} style={styles.list}>
+                {this._renderBillsListHeader(month)}
+                {this._renderBillsList(month)}
+              </View>
+            );
+          })} 
+        </Swiper>
+        {this._renderToast()}
       </View>
     );
   }
@@ -136,8 +133,9 @@ const styles = StyleSheet.create({
   },
   listHeader: {
     alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'center',
+    paddingVertical: 10,
+    backgroundColor: globalStyles.COLOR.medium
   }
 });
 

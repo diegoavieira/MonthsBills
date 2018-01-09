@@ -58,7 +58,7 @@ class Header extends Component {
         <View style={styles.content}>
           <View style={styles.contentTitle}>
             {this._renderLeft()}
-            <Text style={[ styles.title, globalStyles.TEXT.highLight ]}>{title}</Text>
+            <Text style={[ styles.title, globalStyles.TEXT.highLightStrong ]}>{title}</Text>
           </View>
           {this._renderRight()}
         </View>

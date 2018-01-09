@@ -17,6 +17,11 @@ export const TEXT = StyleSheet.create({
     color: COLOR.light,
     fontSize: FONT_SIZE.normal
   },
+  normalPrimaryStrong: {
+    color: COLOR.primary,
+    fontSize: FONT_SIZE.normal,
+    fontWeight: '500'
+  },
   normalMedium: {
     color: COLOR.medium,
     fontSize: FONT_SIZE.normal
@@ -33,6 +38,11 @@ export const TEXT = StyleSheet.create({
   highLight: {
     color: COLOR.light,
     fontSize: FONT_SIZE.high
+  },
+  highLightStrong: {
+    color: COLOR.light,
+    fontSize: FONT_SIZE.high,
+    fontWeight: '500'
   },
   highDark: {
     color: COLOR.dark,

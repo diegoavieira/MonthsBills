@@ -40,7 +40,7 @@ class Toast extends Component {
     } else {
       setTimeout(() => {
         this._getAnimated(0);
-      }, 5000);
+      }, 4000);
     };
   }
 
