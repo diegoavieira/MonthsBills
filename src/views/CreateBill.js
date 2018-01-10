@@ -1,33 +1,25 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { Container, Content, Text } from 'native-base';
 
-import * as globalStyles from '../common/styles';
-import Header from '../components/Header';
+import MyHeader from '../components/MyHeader';
 
 class CreateBill extends Component {
-  
-  _headerLeft = () => {
-    const { goBack } = this.props.navigation;
-    return {
-      icon: 'arrow-left',
-      onPress: goBack
-    };
-  };
 
+  _toGoBack = () => {
+    const { navigation } = this.props;
+    navigation.goBack();
+  }
+  
   render() {
     return (
-      <View style={styles.content}>
-        <Header title="Create Bill" left={this._headerLeft()} />
-        <Text>CreateBill</Text>
-      </View>
+      <Container>
+        <MyHeader left={{ onPress: this._toGoBack }} title='Create Bill' />
+        <Content padder>
+          <Text>CreateBill</Text>
+        </Content>
+      </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  content: {
-    backgroundColor: globalStyles.COLOR.light
-  }
-});
 
 export default CreateBill;

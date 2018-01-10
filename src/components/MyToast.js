@@ -85,9 +85,9 @@ class Toast extends Component {
 const styles = StyleSheet.create({
   content: {
     position: 'absolute',
-    left: 16,
-    right: 16,
-    paddingLeft: 16,
+    left: 15,
+    right: 15,
+    paddingLeft: 15,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     flex: 1,
     justifyContent: 'space-between',
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   button: {
-    padding: 16
+    padding: 15
   }
 });
 

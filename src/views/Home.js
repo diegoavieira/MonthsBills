@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, NetInfo, View, ViewPagerAndroid, Text } from 'react-native';
+import { StyleSheet, NetInfo } from 'react-native';
+import { Container, View } from 'native-base';
+import Swiper from 'react-native-swiper';
 
 import { isConnected } from '../actions';
-import * as globalStyles from '../common/styles';
-import Header from '../components/Header';
+import MyHeader from '../components/MyHeader';
 import BillsList from '../components/BillsList';
-import BtnIcon from '../components/BtnIcon';
 
 class Home extends Component {
   
@@ -30,19 +30,14 @@ class Home extends Component {
     navigation.navigate('CreateBill');
   }
 
-  _headerRight = () => ([
-    {
-      icon: 'plus',
-      onPress: this._toCreateBill
-    }
-  ]);
-
   render() {
     return (
-      <View style={styles.content}>
-        <Header title="Month's Bills" right={this._headerRight()} />
-        <BillsList />
-      </View>
+      <Container>
+        <MyHeader right={{ onPress: this._toCreateBill }} title="Month's Bills" />
+        <View style={styles.content}>
+          <BillsList />
+        </View>
+      </Container>
     );
   }
 }
@@ -54,8 +49,7 @@ const mapStateToProps = state => {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
-    backgroundColor: globalStyles.COLOR.light
+    flex: 1
   }
 })
 

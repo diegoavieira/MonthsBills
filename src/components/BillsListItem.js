@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { ListItem, Text } from 'native-base';
 
 class BillsListItem extends Component {
+  
   render() {
     const { bill } = this.props;
     return (
-      <View style={{ paddingVertical: 15, borderBottomColor: 'lightgray', borderBottomWidth: 0.5, marginHorizontal: 15 }}>
-        <Text style={{ fontSize: 16 }}>{bill.name}</Text>
-        <Text style={{ fontSize: 16 }}>{bill.value}</Text>
-        <Text style={{ fontSize: 16 }}>{bill.status}</Text>
-        <Text style={{ fontSize: 16 }}>{bill.maturity}</Text>
-      </View>
+      <ListItem style={{ flexDirection: 'column', backgroundColor: 'transparent'}} >
+        <Text>{bill.name}</Text>
+        <Text>{bill.value}</Text>
+        <Text>{bill.status}</Text>
+        <Text>{bill.maturity}</Text>
+      </ListItem>
     );
   }
 }
