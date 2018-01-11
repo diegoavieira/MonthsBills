@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Animated, Easing, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { StyleSheet, Animated, Easing } from 'react-native';
+import { Text, Button } from 'native-base';
 
-import * as globalStyles from '../common/styles';
+import { resetMyToast } from '../actions'
 
-class Toast extends Component {
+class MyToast extends Component {
   state = {
-    animatedValue: new Animated.Value(0)
+    animatedValue: new Animated.Value(0),
   }
 
-  componentDidMount() {
-    const { animatedValue } = this.state;
-    this._getAnimated(1);
+  componentWillReceiveProps() {
+    const { myToast } = this.props;
+    console.log(myToast.show)
+    this._getAnimated(myToast.show);
   }
 
   _getAnimated = (toValue) => {
     const { animatedValue } = this.state;
-    const { onCloseButton } = this.props;
     Animated.timing(
       animatedValue,
       {
@@ -23,60 +25,38 @@ class Toast extends Component {
         duration: 300,
         easing: Easing.cubic
       }
-    ).start(() => {
-      if (onCloseButton) {
-        () => {}
-      } else {
-        this._onClose();
-      };
-    });
+    ).start();
   }
   
   _onClose = () => {
-    const { animatedValue } = this.state;
-    const { onCloseButton } = this.props;
-    if (onCloseButton) {
-      this._getAnimated(0);
-    } else {
-      setTimeout(() => {
-        this._getAnimated(0);
-      }, 4000);
-    };
-  }
-
-  _renderOnCloseButton = () => {
-    const { onCloseButton } = this.props;
-    if (onCloseButton) {
-      return (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={this._onClose}
-        >
-          <Text style={[globalStyles.TEXT.normalMedium]}>Okay</Text>
-        </TouchableOpacity>
-      );
-    };
-    return null;
+    const { myToast } = this.props;
+    this._getAnimated(0)
+    myToast.onPress();
   }
 
   render() {
     const { animatedValue } = this.state;
-    const { onCloseButton, message } = this.props;
+    const { myToast } = this.props;
     const bottom = animatedValue.interpolate({
       inputRange: [0, 1],
-      outputRange: [-15, 15],
+      outputRange: [-16, 0]
     });
     return (
       <Animated.View
         style={[
           styles.content,
           { opacity: animatedValue },
-          { bottom },
-          { padding: onCloseButton ? null : 15 }
+          { bottom }
         ]}
       >
-        <Text style={globalStyles.TEXT.normalLight}>{message}</Text>
-        {this._renderOnCloseButton()}
+        <Text style={styles.message}>{myToast.message}</Text>
+        <Button
+          onPress={this._onClose}
+          transparent
+          warning
+        >
+          <Text>{myToast.label}</Text>
+        </Button>
       </Animated.View>
     );
   }
@@ -85,18 +65,22 @@ class Toast extends Component {
 const styles = StyleSheet.create({
   content: {
     position: 'absolute',
-    left: 15,
-    right: 15,
-    paddingLeft: 15,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    flex: 1,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row'
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    paddingLeft: 16
   },
-  button: {
-    padding: 15
+  message: {
+    color: '#fff'
   }
 });
 
-export default Toast;
+const mapStateToProps = state => {
+  const { myToast } = state.myToastReducer;
+  return { myToast };
+};
+
+export default connect(mapStateToProps, { resetMyToast })(MyToast);

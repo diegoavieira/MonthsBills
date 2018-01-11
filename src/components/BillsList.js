@@ -5,45 +5,18 @@ import { StyleSheet } from 'react-native';
 import { List, Text, View, Button, Spinner } from 'native-base';
 import Swiper from 'react-native-swiper';
 
-import { fetchBills, clearFetchBills } from '../actions';
-import * as globalStyles from '../common/styles';
-import MyToast from './MyToast';
+import { fetchBills, clearFetchBills, setMyToast } from '../actions';
 import BillsListItem from './BillsListItem';
 
 class BillsList extends Component {
 
   componentDidMount() {
-    this.props.fetchBills();
+    this.props.fetchBills(this._refreshBillsList);
   }
-
+  
   _refreshBillsList = () => {
     this.props.clearFetchBills();
-    this.props.fetchBills();
-  }
-
-  _renderError = () => {
-    const { bills, connection } = this.props;
-    if (bills.success === false && connection.online) {
-      return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.7)',  paddingLeft: 15, paddingVertical: 10 }}>
-          <Text style={{ color: '#fff' }}>{bills.message}</Text>
-          <Button onPress={this._refreshBillsList} transparent warning small>
-            <Text>Refresh</Text>
-          </Button>
-        </View>
-      );
-    };
-    if (bills.success === false && connection.online === false) {
-      return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.7)',  paddingLeft: 15, paddingVertical: 10 }}>
-          <Text style={{ color: '#fff' }}>{connection.message}</Text>
-          <Button onPress={this._refreshBillsList} transparent warning small>
-            <Text>Refresh</Text>
-          </Button>
-        </View>
-      );
-    };
-    return null;
+    this.props.fetchBills(this._refreshBillsList);
   }
   
   _renderLoading = () => {
@@ -119,7 +92,6 @@ class BillsList extends Component {
           >
           {this._billsPages()} 
         </Swiper>
-        {this._renderError()}
       </View>
     );
   }
@@ -142,4 +114,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps, { fetchBills, clearFetchBills })(BillsList);
+export default connect(mapStateToProps, { fetchBills, clearFetchBills, setMyToast })(BillsList);

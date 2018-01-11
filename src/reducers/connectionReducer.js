@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
   connection: {
     online: null,
-    message: null
+    message: null,
   }
 };
 

@@ -3,7 +3,6 @@ const INITIAL_STATE = {
     data: [],
     loading: true,
     success: null,
-    message: null
   }
 };
 
@@ -12,7 +11,7 @@ export default (state = INITIAL_STATE, action) => {
     case 'FETCH_BILLS': 
       return { ...state, bills: { ...state.bills, ...action.payload, loading: false } };
     case 'CLEAR_FETCH_BILLS':
-      return { ...state, bills: { ...state.bills, loading: true, success: null, message: null } };
+      return { ...state, bills: { ...state.bills, loading: true, success: null } };
     default:
       return state;
   };
