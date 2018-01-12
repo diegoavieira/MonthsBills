@@ -3,20 +3,16 @@ import { connect } from 'react-redux';
 import { StyleSheet, Animated, Easing } from 'react-native';
 import { Text, Button } from 'native-base';
 
-import { resetMyToast } from '../actions'
-
 class MyToast extends Component {
   state = {
     animatedValue: new Animated.Value(0),
   }
 
-  componentWillReceiveProps() {
-    const { myToast } = this.props;
-    console.log(myToast.show)
-    this._getAnimated(myToast.show);
+  componentWillReceiveProps(nextProps) {
+    this._getAnimated(nextProps.myToast.show);
   }
 
-  _getAnimated = (toValue) => {
+  _getAnimated = toValue => {
     const { animatedValue } = this.state;
     Animated.timing(
       animatedValue,
@@ -30,8 +26,10 @@ class MyToast extends Component {
   
   _onClose = () => {
     const { myToast } = this.props;
-    this._getAnimated(0)
-    myToast.onPress();
+    this._getAnimated(0);
+    if (myToast.onPress) {
+      myToast.onPress();
+    };
   }
 
   render() {
@@ -55,7 +53,7 @@ class MyToast extends Component {
           transparent
           warning
         >
-          <Text>{myToast.label}</Text>
+          <Text>{myToast.onPressLabel}</Text>
         </Button>
       </Animated.View>
     );
@@ -83,4 +81,4 @@ const mapStateToProps = state => {
   return { myToast };
 };
 
-export default connect(mapStateToProps, { resetMyToast })(MyToast);
+export default connect(mapStateToProps, { })(MyToast);

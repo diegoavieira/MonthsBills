@@ -4,7 +4,3 @@ export const setMyToast = values => {
     payload: { ...values }
   };
 };
-
-export const resetMyToast = () => {
-  return { type: 'RESET_MY_TOAST' };
-};

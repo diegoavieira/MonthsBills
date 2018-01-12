@@ -1,32 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, RefreshControl } from 'react-native';
 import { List, Text, View, Button, Spinner } from 'native-base';
 import Swiper from 'react-native-swiper';
 
-import { fetchBills, clearFetchBills, setMyToast } from '../actions';
+import { fetchBills, fetchBillsRestore, setMyToast } from '../actions';
 import BillsListItem from './BillsListItem';
 
 class BillsList extends Component {
 
   componentDidMount() {
-    this.props.fetchBills(this._refreshBillsList);
-  }
-  
-  _refreshBillsList = () => {
-    this.props.clearFetchBills();
-    this.props.fetchBills(this._refreshBillsList);
-  }
-  
-  _renderLoading = () => {
-    const { bills } = this.props;
-    if (bills.loading) {
-      return <Spinner />
-    };
-    return null;
+    this.props.fetchBills();
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { bills } = nextProps;
+    this.props.setMyToast({
+      show: bills.success === false ? 1 : 0,
+      message: 'Offline server. Try again to sync.',
+      onPressLabel: 'Try again',
+      onPress: () => this._refreshBillsList()
+    });
+  }
+
+  _refreshBillsList = () => {
+    this.props.fetchBillsRestore();
+    this.props.fetchBills();
+  }
+  
   _billsPerMonth = month => {
     const { bills } = this.props;
     return bills.data.filter(bill => {
@@ -40,6 +42,12 @@ class BillsList extends Component {
       <List
         dataArray={this._billsPerMonth(month)}
         renderRow={item => <BillsListItem bill={item} />}
+        refreshControl={
+          <RefreshControl 
+            refreshing={bills.loading}
+            onRefresh={this._refreshBillsList}
+          />
+        }
       >
       </List>
     );
@@ -55,20 +63,22 @@ class BillsList extends Component {
 
   _billsPages = () => {
     const { bills } = this.props;
-    return bills.data.map(el => {
-      return this._getMonthYear(el.maturity)
-    })
-    .filter((el, index, arr) => {
-      return index === arr.indexOf(el);
-    })
-    .map((month, index) => {
-      return (
-        <View key={index} style={styles.list}>
-          {this._renderBillsListHeader(month)}
-          {this._renderBillsList(month)}
-        </View>
-      );
-    });
+    if (bills.data) {
+      return bills.data.map(el => {
+        return this._getMonthYear(el.maturity)
+      })
+      .filter((el, index, arr) => {
+        return index === arr.indexOf(el);
+      })
+      .map((month, index) => {
+        return (
+          <View key={index} style={styles.list}>
+            {this._renderBillsListHeader(month)}
+            {this._renderBillsList(month)}
+          </View>
+        );
+      });
+    };
   }
 
   _getMonthYear = date => {
@@ -76,22 +86,39 @@ class BillsList extends Component {
   }
 
   _setInitialPage = (month = moment()) => {
-    return this._billsPages().indexOf(this._getMonthYear(month))
+    if (Array.isArray(this._billsPages)) {
+      return this._billsPages().indexOf(this._getMonthYear(month))
+    };
+  }
+
+  _renderSwiper = () => {
+    const { bills } = this.props;
+    console.log(bills)
+    if (bills.data) {
+      return (
+        <Swiper
+          showsPagination={false}
+          index={this._setInitialPage()}
+          loop={false}
+        >
+          {this._billsPages()} 
+        </Swiper>
+      );
+    } else {
+      return (
+        <View style={styles.list}>
+          {this._renderBillsListHeader(this._getMonthYear(moment()))}
+          <Text>Create a bill.</Text>
+        </View>
+      );
+    }
   }
 
   render() {
     const { bills } = this.props;
     return (
       <View style={styles.content}>
-        {this._renderLoading()}
-        <Swiper
-          style={styles.content}
-          showsPagination={false}
-          index={this._setInitialPage()}
-          loop={false}
-          >
-          {this._billsPages()} 
-        </Swiper>
+        {this._renderSwiper()}
       </View>
     );
   }
@@ -107,6 +134,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1
   },
+  list: {
+    flex: 1
+  },
   listHeader: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -114,4 +144,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps, { fetchBills, clearFetchBills, setMyToast })(BillsList);
+export default connect(mapStateToProps, { fetchBills, fetchBillsRestore, setMyToast })(BillsList);
