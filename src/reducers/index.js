@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
+import routersReducer from './routersReducer';
 import connectionReducer from './connectionReducer';
 import billsReducer from './billsReducer';
-import myToastReducer from './myToastReducer';
 
 export default combineReducers({
+  routersReducer,
   connectionReducer,
   billsReducer,
-  myToastReducer
 });

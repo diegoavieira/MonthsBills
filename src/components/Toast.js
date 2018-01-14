@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { StyleSheet, Animated, Easing } from 'react-native';
-import { Text, Button } from 'native-base';
+import { StyleSheet, Animated, Easing, Text, Button } from 'react-native';
 
-class MyToast extends Component {
+class Toast extends Component {
   state = {
     animatedValue: new Animated.Value(0),
   }
 
   componentWillReceiveProps(nextProps) {
-    this._getAnimated(nextProps.myToast.show);
+    this._getAnimated(nextProps.params.show);
   }
 
   _getAnimated = toValue => {
@@ -25,16 +23,16 @@ class MyToast extends Component {
   }
   
   _onClose = () => {
-    const { myToast } = this.props;
+    const { params } = this.props;
     this._getAnimated(0);
-    if (myToast.onPress) {
-      myToast.onPress();
+    if (params.onPress) {
+      params.onPress();
     };
   }
 
   render() {
     const { animatedValue } = this.state;
-    const { myToast } = this.props;
+    const { params } = this.props;
     const bottom = animatedValue.interpolate({
       inputRange: [0, 1],
       outputRange: [-16, 0]
@@ -47,14 +45,11 @@ class MyToast extends Component {
           { bottom }
         ]}
       >
-        <Text style={styles.message}>{myToast.message}</Text>
+        <Text style={styles.message} >{params.message}</Text>
         <Button
           onPress={this._onClose}
-          transparent
-          warning
-        >
-          <Text>{myToast.onPressLabel}</Text>
-        </Button>
+          title={params.onPressLabel}
+        />
       </Animated.View>
     );
   }
@@ -69,16 +64,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',
-    paddingLeft: 16
+    paddingHorizontal: 16,
+    paddingVertical: 5
   },
   message: {
-    color: '#fff'
+    color: '#fff',
+    width: '70%'
   }
 });
 
-const mapStateToProps = state => {
-  const { myToast } = state.myToastReducer;
-  return { myToast };
-};
-
-export default connect(mapStateToProps, { })(MyToast);
+export default Toast;

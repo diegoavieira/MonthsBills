@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import { ListItem, Text } from 'native-base';
+import moment from 'moment';
+import { View, Text } from 'react-native';
 
 class BillsListItem extends Component {
   
   render() {
     const { bill } = this.props;
     return (
-      <ListItem style={{ flexDirection: 'column', backgroundColor: 'transparent'}} >
+      <View style={{ flexDirection: 'column', backgroundColor: 'transparent'}} >
+        <Text>{bill.id}</Text>
         <Text>{bill.name}</Text>
-        <Text>{bill.value}</Text>
+        <Text>{bill.value.toFixed(2)}</Text>
         <Text>{bill.status}</Text>
-        <Text>{bill.maturity}</Text>
-      </ListItem>
+        <Text>{moment(bill.maturity).format('MM/DD/YYYY')}</Text>
+      </View>
     );
   }
 }

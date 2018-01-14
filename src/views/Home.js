@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, NetInfo } from 'react-native';
-import { Container, View } from 'native-base';
+import { StyleSheet, NetInfo, Text, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import { isConnected } from '../actions';
-import MyHeader from '../components/MyHeader';
+import { isConnected, createBill } from '../actions';
+import Header from '../components/Header';
 import BillsList from '../components/BillsList';
 
 class Home extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    header: <Header title="Month's Bills" right={{ onPress: () => navigation.navigate('CreateBill')}} />
+  });
   
   componentDidMount() {
     NetInfo.addEventListener('connectionChange', this._onConnectivityChange);
@@ -25,19 +27,11 @@ class Home extends Component {
     this.props.isConnected(connectionInfo);
   }
 
-  _toCreateBill = () => {
-    const { navigation } = this.props;
-    navigation.navigate('CreateBill');
-  }
-
   render() {
     return (
-      <Container>
-        <MyHeader right={{ onPress: this._toCreateBill }} title="Month's Bills" />
-        <View style={styles.content}>
-          <BillsList />
-        </View>
-      </Container>
+      <View style={styles.content}>
+        <BillsList />
+      </View>
     );
   }
 }
@@ -49,8 +43,8 @@ const mapStateToProps = state => {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1
+    flex: 1,
   }
-})
+});
 
-export default connect(mapStateToProps, { isConnected })(Home);
+export default connect(mapStateToProps, { isConnected, createBill })(Home);

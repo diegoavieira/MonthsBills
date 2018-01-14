@@ -1,24 +1,22 @@
-import axios from 'axios';
+import realm from '../config/realm';
 
-const REQUEST_DATA = 'https://rest-api-posts.herokuapp.com';  
+export const createBill = params => {
+  const id = realm.objects('Bill').length + 1;
+  realm.write(() => {
+    realm.create('Bill', { id, ...params });
+  });
+  return {
+    type: 'CREATE_BILL',
+    payload: ''
+  }
+};
 
 export const fetchBills = () => {
-  const fetchBillsUrl = `${REQUEST_DATA}/bills`; 
-  return dispatch => {
-    axios.get(fetchBillsUrl).then(result => {
-      if (result.status === 200) {
-        dispatch({
-          type: 'FETCH_BILLS',
-          payload: { data: result.data, success: true }
-        });
-      };
-    }).catch(error => {
-      dispatch({
-        type: 'FETCH_BILLS',
-        payload: { success: false, message: error.message }
-      });
-    });
-  };
+  const data = realm.objects('Bill');
+  return {
+    type: 'FETCH_BILLS',
+    payload: { data: Array.from(data), success: true }
+  }
 };
 
 export const fetchBillsRestore = () => {

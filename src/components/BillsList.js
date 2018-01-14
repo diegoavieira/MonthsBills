@@ -1,27 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { StyleSheet, RefreshControl } from 'react-native';
-import { List, Text, View, Button, Spinner } from 'native-base';
+import { StyleSheet, RefreshControl, View, Text, FlatList } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import { fetchBills, fetchBillsRestore, setMyToast } from '../actions';
+import { fetchBills, fetchBillsRestore } from '../actions';
 import BillsListItem from './BillsListItem';
 
 class BillsList extends Component {
 
   componentDidMount() {
     this.props.fetchBills();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { bills } = nextProps;
-    this.props.setMyToast({
-      show: bills.success === false ? 1 : 0,
-      message: 'Offline server. Try again to sync.',
-      onPressLabel: 'Try again',
-      onPress: () => this._refreshBillsList()
-    });
   }
 
   _refreshBillsList = () => {
@@ -39,17 +28,11 @@ class BillsList extends Component {
   _renderBillsList = month => {
     const { bills } = this.props;
     return (
-      <List
-        dataArray={this._billsPerMonth(month)}
-        renderRow={item => <BillsListItem bill={item} />}
-        refreshControl={
-          <RefreshControl 
-            refreshing={bills.loading}
-            onRefresh={this._refreshBillsList}
-          />
-        }
-      >
-      </List>
+      <FlatList
+        data={this._billsPerMonth(month)}
+        renderItem={({item}) => <BillsListItem bill={item} />}
+        keyExtractor={(item, index) => index}
+      />
     );
   }
 
@@ -93,7 +76,6 @@ class BillsList extends Component {
 
   _renderSwiper = () => {
     const { bills } = this.props;
-    console.log(bills)
     if (bills.data) {
       return (
         <Swiper
@@ -144,4 +126,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps, { fetchBills, fetchBillsRestore, setMyToast })(BillsList);
+export default connect(mapStateToProps, { fetchBills, fetchBillsRestore })(BillsList);

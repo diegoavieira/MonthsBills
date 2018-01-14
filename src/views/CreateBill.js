@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
-import { Container, Content, Text } from 'native-base';
+import { View, Text } from 'react-native';
 
-import MyHeader from '../components/MyHeader';
+import Header from '../components/Header';
 
 class CreateBill extends Component {
-
-  _toGoBack = () => {
-    const { navigation } = this.props;
-    navigation.goBack();
-  }
+  static navigationOptions = ({ navigation }) => ({
+    header: <Header title="Create Bill" left={{ onPress: () => navigation.goBack()}} />
+  });
   
   render() {
     return (
-      <Container>
-        <MyHeader left={{ onPress: this._toGoBack }} title='Create Bill' />
-        <Content padder>
-          <Text>CreateBill</Text>
-        </Content>
-      </Container>
+      <View>
+        <Text>CreateBill</Text>
+      </View>
     );
   }
 }
