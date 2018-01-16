@@ -29,7 +29,7 @@ class Home extends Component {
 
   render() {
     return (
-      <View style={styles.content}>
+      <View style={styles.container}>
         <BillsList />
       </View>
     );
@@ -42,7 +42,7 @@ const mapStateToProps = state => {
 };
 
 const styles = StyleSheet.create({
-  content: {
+  container: {
     flex: 1,
   }
 });

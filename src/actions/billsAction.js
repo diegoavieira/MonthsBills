@@ -1,6 +1,6 @@
 import realm from '../config/realm';
 
-export const createBill = params => {
+export const submitCreateBill = params => {
   const id = realm.objects('Bill').length + 1;
   realm.write(() => {
     realm.create('Bill', { id, ...params });
